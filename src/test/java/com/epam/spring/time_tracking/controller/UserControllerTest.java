@@ -191,7 +191,7 @@ public class UserControllerTest {
         userDtoWithInputData.setPassword("");
         userDtoWithInputData.setRepeatPassword("");
 
-        int validations = 6;
+        int validations = 7;
 
         ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -649,7 +649,7 @@ public class UserControllerTest {
         userDtoWithInputData.setPassword("");
         userDtoWithInputData.setRepeatPassword("");
 
-        int validations = 6;
+        int validations = 7;
 
         ObjectMapper jsonMapper = new ObjectMapper();
 
