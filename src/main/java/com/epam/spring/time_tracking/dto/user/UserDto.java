@@ -39,7 +39,7 @@ public class UserDto {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Password(groups = {OnCreate.class, OnUpdatePassword.class})
-    @NotBlank(message = "{validation.not_blank.password}", groups = OnAuthorization.class)
+    @NotBlank(message = "{validation.not_blank.password}", groups = {OnCreate.class, OnUpdatePassword.class, OnAuthorization.class})
     @Null(message = "{validation.null.password}", groups = OnUpdate.class)
     private String password;
 
