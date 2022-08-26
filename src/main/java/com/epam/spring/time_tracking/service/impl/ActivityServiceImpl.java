@@ -85,8 +85,9 @@ public class ActivityServiceImpl implements ActivityService {
         User creator = userRepo.findById(activityDto.getCreatorId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (!creator.isAdmin())
+        if (!creator.isAdmin()) {
             throw new RestrictionException(ErrorMessage.INSTANTLY_ACTIVITY_CREATION);
+        }
 
         Activity activity = ActivityMapper.INSTANCE.fromActivityDto(activityDto);
         activity.setStatus(ActivityStatus.BY_ADMIN);
@@ -141,16 +142,18 @@ public class ActivityServiceImpl implements ActivityService {
 
         if (activity.getStatus().equals(ActivityStatus.ADD_WAITING) ||
                 activity.getStatus().equals(ActivityStatus.ADD_DECLINED) ||
-                activity.getStatus().equals(ActivityStatus.DEL_CONFIRMED))
+                activity.getStatus().equals(ActivityStatus.DEL_CONFIRMED)) {
             throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_AVAILABLE);
+        }
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (user.isAdmin())
+        if (user.isAdmin()) {
             throw new ExistenceException(ErrorMessage.ADMIN_CAN_NOT_BE_IN_ACTIVITY);
-        if (activityUserRepo.userExistsInActivity(user, activity))
+        } else if (activityUserRepo.userExistsInActivity(user, activity)) {
             throw new ExistenceException(ErrorMessage.USER_EXISTS_IN_ACTIVITY);
+        }
 
         ActivityUser activityUser = new ActivityUser();
 

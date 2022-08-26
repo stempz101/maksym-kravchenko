@@ -28,7 +28,7 @@ public class Activity {
     private String image;
 
     @Column(nullable = false)
-    private int peopleCount = 0;
+    private int peopleCount;
 
     @Column(nullable = false)
     private LocalDateTime createTime = LocalDateTime.now();

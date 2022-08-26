@@ -60,10 +60,11 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         log.info("Creating user: {}", userDto);
 
-        if (userRepo.existsByEmail(userDto.getEmail()))
+        if (userRepo.existsByEmail(userDto.getEmail())) {
             throw new ExistenceException(ErrorMessage.USER_EXISTS_WITH_EMAIL);
-        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
+        } else if (!userDto.getPassword().equals(userDto.getRepeatPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
+        }
 
         User user = UserMapper.INSTANCE.fromUserDto(userDto);
 
@@ -79,8 +80,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (!userDto.getPassword().equals(user.getPassword()))
+        if (!userDto.getPassword().equals(user.getPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
+        }
 
         log.info("User (id={}) is authorized", user.getId());
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
@@ -105,8 +107,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (!user.isAdmin())
+        if (!user.isAdmin()) {
             throw new RestrictionException(ErrorMessage.USER_IS_NOT_AN_ADMIN);
+        }
 
         return activityRepo.findAllByCreator(user, pageable).stream()
                 .map(ActivityMapper.INSTANCE::toActivityDtoForAdminProfile)
@@ -135,8 +138,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (userRepo.existsByEmail(userDto.getEmail()) && !user.getEmail().equals(userDto.getEmail()))
+        if (userRepo.existsByEmail(userDto.getEmail()) && !user.getEmail().equals(userDto.getEmail())) {
             throw new ExistenceException(ErrorMessage.USER_EXISTS_WITH_EMAIL);
+        }
 
         user = UpdateMapper.updateUserInformationWithPresentUserDtoFields(user, userDto);
 
@@ -153,10 +157,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (!userDto.getCurrentPassword().equals(user.getPassword()))
+        if (!userDto.getCurrentPassword().equals(user.getPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
-        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
+        } else if (!userDto.getPassword().equals(userDto.getRepeatPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
+        }
 
         user = UpdateMapper.updateUserPasswordWithPresentUserDtoFields(user, userDto);
 
