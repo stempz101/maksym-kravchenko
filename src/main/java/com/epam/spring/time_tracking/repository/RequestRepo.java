@@ -9,7 +9,7 @@ public interface RequestRepo {
 
     List<Request> getRequests();
 
-    Request getRequest(int requestId);
+    Request getRequestById(int requestId);
 
     Request createRequestToAdd(Activity activity);
 

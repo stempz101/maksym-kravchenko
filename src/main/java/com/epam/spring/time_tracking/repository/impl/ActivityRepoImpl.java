@@ -50,7 +50,7 @@ public class ActivityRepoImpl implements ActivityRepo {
         checkIfUserExists(activity.getCreatorId(), "creator is not found");
         activity.setId(++idCounter);
         if (activity.getCategories() == null || activity.getCategories().isEmpty())
-            activity.setCategories(List.of(categoryRepo.getCategory(0)));
+            activity.setCategories(List.of(categoryRepo.getCategoryById(0)));
         activity.setCreateTime(LocalDateTime.now());
         if (isForRequest)
             activity.setStatus(Activity.Status.ADD_WAITING);
@@ -75,7 +75,7 @@ public class ActivityRepoImpl implements ActivityRepo {
         Activity updatedActivity = getActivityById(activityId);
         updatedActivity.setName(activity.getName());
         if (activity.getCategories() == null || activity.getCategories().isEmpty())
-            updatedActivity.setCategories(List.of(categoryRepo.getCategory(0)));
+            updatedActivity.setCategories(List.of(categoryRepo.getCategoryById(0)));
         else
             updatedActivity.setCategories(activity.getCategories());
         updatedActivity.setDescription(activity.getDescription());

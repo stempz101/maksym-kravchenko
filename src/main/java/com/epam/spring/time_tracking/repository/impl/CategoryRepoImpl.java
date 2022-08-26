@@ -29,7 +29,7 @@ public class CategoryRepoImpl implements CategoryRepo {
     }
 
     @Override
-    public Category getCategory(int categoryId) {
+    public Category getCategoryById(int categoryId) {
         log.info("Getting category with id: {}", categoryId);
         return categoryList.stream()
                 .filter(category -> category.getId() == categoryId)
@@ -56,7 +56,7 @@ public class CategoryRepoImpl implements CategoryRepo {
             throw new RuntimeException("category name (EN) already exists");
         if (!checkForUnique(category, Language.UA))
             throw new RuntimeException("category name (UA) already exists");
-        Category updatedCategory = getCategory(categoryId);
+        Category updatedCategory = getCategoryById(categoryId);
         updatedCategory.setNameEN(category.getNameEN());
         updatedCategory.setNameUA(category.getNameUA());
         return updatedCategory;

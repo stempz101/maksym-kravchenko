@@ -8,7 +8,7 @@ public interface CategoryRepo {
 
     List<Category> getCategories();
 
-    Category getCategory(int categoryId);
+    Category getCategoryById(int categoryId);
 
     Category createCategory(Category category);
 

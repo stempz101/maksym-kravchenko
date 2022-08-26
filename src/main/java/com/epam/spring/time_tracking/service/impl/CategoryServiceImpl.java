@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getCategory(int categoryId) {
         log.info("Getting category with id: {}", categoryId);
-        Category category = categoryRepo.getCategory(categoryId);
+        Category category = categoryRepo.getCategoryById(categoryId);
         return modelMapper.map(category, CategoryDto.class);
     }
 
@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(int categoryId) {
         log.info("Deleting category with id: {}", categoryId);
-        activityRepo.deleteCategoryInActivities(categoryRepo.getCategory(categoryId));
+        activityRepo.deleteCategoryInActivities(categoryRepo.getCategoryById(categoryId));
         categoryRepo.deleteCategory(categoryId);
     }
 

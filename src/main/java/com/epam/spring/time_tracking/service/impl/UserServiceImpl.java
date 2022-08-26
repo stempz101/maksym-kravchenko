@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ActivityForUserProfileDto> getUserActivitiesForProfile(int userId) {
         log.info("Getting activities for user's profile, who has an id: {}", userId);
-        List<UserActivity> userActivityList = userActivityRepo.getActivitiesForUser(userId);
+        List<UserActivity> userActivityList = userActivityRepo.getActivitiesByUserId(userId);
         return userActivityList.stream()
                 .map(userActivity -> {
                     Activity activity = userActivity.getActivity();

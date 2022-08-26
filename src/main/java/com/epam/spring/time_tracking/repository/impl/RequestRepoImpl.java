@@ -33,7 +33,7 @@ public class RequestRepoImpl implements RequestRepo {
     }
 
     @Override
-    public Request getRequest(int requestId) {
+    public Request getRequestById(int requestId) {
         log.info("Getting request with id: {}", requestId);
         return requestList.stream()
                 .filter(r -> r.getId() == requestId)
@@ -74,7 +74,7 @@ public class RequestRepoImpl implements RequestRepo {
     @Override
     public Request confirmRequest(int requestId) {
         log.info("Confirmation of request with id: {}", requestId);
-        Request request = getRequest(requestId);
+        Request request = getRequestById(requestId);
         request.setStatus(Request.Status.CONFIRMED);
         Activity activity = activityRepo.getActivityById(request.getActivityId());
         if (request.isForDelete()) {
@@ -97,7 +97,7 @@ public class RequestRepoImpl implements RequestRepo {
     @Override
     public Request declineRequest(int requestId) {
         log.info("Declining of request with id: {}", requestId);
-        Request request = getRequest(requestId);
+        Request request = getRequestById(requestId);
         request.setStatus(Request.Status.DECLINED);
         Activity activity = activityRepo.getActivityById(request.getActivityId());
         if (request.isForDelete())
@@ -110,7 +110,7 @@ public class RequestRepoImpl implements RequestRepo {
     @Override
     public void deleteRequest(int requestId) {
         log.info("Deleting request with id: {}", requestId);
-        Request request = getRequest(requestId);
+        Request request = getRequestById(requestId);
         if ((request.isForDelete() && request.getStatus().equals(Request.Status.CONFIRMED)) ||
                 (!request.isForDelete() && !request.getStatus().equals(Request.Status.CONFIRMED)))
             activityRepo.deleteActivity(request.getActivityId());

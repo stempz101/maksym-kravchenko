@@ -35,7 +35,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
     }
 
     @Override
-    public List<UserActivity> getActivitiesForUser(int userId) {
+    public List<UserActivity> getActivitiesByUserId(int userId) {
         log.info("Getting activities for user with id: {}", userId);
         return userActivityList.stream()
                 .filter(userActivity -> userActivity.getUser().getId() == userId)

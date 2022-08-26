@@ -41,7 +41,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto getRequest(int requestId) {
         log.info("Getting request with id: {}", requestId);
-        Request request = requestRepo.getRequest(requestId);
+        Request request = requestRepo.getRequestById(requestId);
         return mapRequestToRequestDto(request);
     }
 

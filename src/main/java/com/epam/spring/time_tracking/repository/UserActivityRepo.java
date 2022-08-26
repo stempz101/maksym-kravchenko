@@ -8,7 +8,7 @@ public interface UserActivityRepo {
 
     List<UserActivity> getActivityUsers(int activityId);
 
-    List<UserActivity> getActivitiesForUser(int userId);
+    List<UserActivity> getActivitiesByUserId(int userId);
 
     UserActivity getUserInActivity(int activityId, int userId);
 

@@ -50,7 +50,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivityForUserDto> getActivitiesForUser(int userId) {
         log.info("Getting activities for user with id: {}", userId);
-        List<UserActivity> activities = userActivityRepo.getActivitiesForUser(userId);
+        List<UserActivity> activities = userActivityRepo.getActivitiesByUserId(userId);
         return activities.stream()
                 .map(UserActivity::getActivity)
                 .map(activity -> modelMapper.map(activity, ActivityForUserDto.class))
@@ -138,11 +138,11 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = modelMapper.map(activityInputDto, Activity.class);
         if (activityInputDto.getCategoryIds() != null) {
             List<Category> categories = activityInputDto.getCategoryIds().stream()
-                    .map(categoryRepo::getCategory)
+                    .map(categoryRepo::getCategoryById)
                     .collect(Collectors.toList());
             activity.setCategories(categories);
         } else {
-            activity.setCategories(List.of(categoryRepo.getCategory(0)));
+            activity.setCategories(List.of(categoryRepo.getCategoryById(0)));
         }
         return activity;
     }
