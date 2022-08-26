@@ -49,13 +49,15 @@ public class ActivityRepoImpl implements ActivityRepo {
         log.info("Creating activity for request: {}", isForRequest);
         checkIfUserExists(activity.getCreatorId(), "creator is not found");
         activity.setId(++idCounter);
-        if (activity.getCategories() == null || activity.getCategories().isEmpty())
+        if (activity.getCategories() == null || activity.getCategories().isEmpty()) {
             activity.setCategories(List.of(categoryRepo.getCategoryById(0)));
+        }
         activity.setCreateTime(LocalDateTime.now());
-        if (isForRequest)
+        if (isForRequest) {
             activity.setStatus(Activity.Status.ADD_WAITING);
-        else
+        } else {
             activity.setStatus(Activity.Status.BY_ADMIN);
+        }
         activityList.add(activity);
         return activity;
     }
@@ -74,10 +76,11 @@ public class ActivityRepoImpl implements ActivityRepo {
         log.info("Updating activity (id={}): {}", activityId, activity);
         Activity updatedActivity = getActivityById(activityId);
         updatedActivity.setName(activity.getName());
-        if (activity.getCategories() == null || activity.getCategories().isEmpty())
+        if (activity.getCategories() == null || activity.getCategories().isEmpty()) {
             updatedActivity.setCategories(List.of(categoryRepo.getCategoryById(0)));
-        else
+        } else {
             updatedActivity.setCategories(activity.getCategories());
+        }
         updatedActivity.setDescription(activity.getDescription());
         updatedActivity.setImage(activity.getImage());
         return updatedActivity;
@@ -96,15 +99,17 @@ public class ActivityRepoImpl implements ActivityRepo {
                 .filter(activity -> activity.getCategories().contains(category))
                 .forEach(activity -> {
                     activity.getCategories().removeIf(c -> c.getId() == category.getId());
-                    if (activity.getCategories().isEmpty())
+                    if (activity.getCategories().isEmpty()) {
                         activity.getCategories().add(Category.builder().nameEN("Other").nameUA("Інше").build());
+                    }
                 });
     }
 
     private void checkIfUserExists(int userId, String errorMessage) {
         log.info("Checking if user exists");
-        if (!userRepo.checkIfUserExists(userId))
+        if (!userRepo.checkIfUserExists(userId)) {
             throw new RuntimeException(errorMessage);
+        }
     }
 
 }

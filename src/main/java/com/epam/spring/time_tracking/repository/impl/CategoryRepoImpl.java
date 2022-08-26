@@ -40,10 +40,11 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public Category createCategory(Category category) {
         log.info("Creating category: {}", category);
-        if (!checkForUnique(category, Language.EN))
+        if (!checkForUnique(category, Language.EN)) {
             throw new RuntimeException("category name (EN) already exists");
-        if (!checkForUnique(category, Language.UA))
+        } else if (!checkForUnique(category, Language.UA)) {
             throw new RuntimeException("category name (UA) already exists");
+        }
         category.setId(++idCounter);
         categoryList.add(category);
         return category;
@@ -52,10 +53,11 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public Category updateCategory(int categoryId, Category category) {
         log.info("Updating category (id={}): {}", categoryId, category);
-        if (!checkForUnique(category, Language.EN))
+        if (!checkForUnique(category, Language.EN)) {
             throw new RuntimeException("category name (EN) already exists");
-        if (!checkForUnique(category, Language.UA))
+        } else if (!checkForUnique(category, Language.UA)) {
             throw new RuntimeException("category name (UA) already exists");
+        }
         Category updatedCategory = getCategoryById(categoryId);
         updatedCategory.setNameEN(category.getNameEN());
         updatedCategory.setNameUA(category.getNameUA());
@@ -70,9 +72,10 @@ public class CategoryRepoImpl implements CategoryRepo {
 
     private boolean checkForUnique(Category category, Language language) {
         log.info("Checking category for unique");
-        if (language.equals(Language.UA))
+        if (language.equals(Language.UA)) {
             return categoryList.stream()
                     .noneMatch(c -> c.getNameUA().equals(category.getNameUA()));
+        }
         return categoryList.stream()
                 .noneMatch(c -> c.getNameEN().equals(category.getNameEN()));
     }

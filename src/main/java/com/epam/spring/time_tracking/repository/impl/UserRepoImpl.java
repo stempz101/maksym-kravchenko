@@ -53,8 +53,9 @@ public class UserRepoImpl implements UserRepo {
     @Override
     public User createUser(User user) {
         log.info("Creating user: {}", user);
-        if (!checkForUnique(user))
+        if (!checkForUnique(user)) {
             throw new RuntimeException("user with this email already exists");
+        }
         user.setId(++idCounter);
         userList.add(user);
         return user;

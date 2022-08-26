@@ -63,10 +63,11 @@ public class RequestServiceImpl implements RequestService {
     public RequestDto createRequestToRemove(int activityId) {
         log.info("Creating request to remove an activity with id: {}", activityId);
         Activity activity = activityRepo.getActivityById(activityId);
-        if (activity == null)
+        if (activity == null) {
             throw new RuntimeException("activity is not found");
-        if (!activity.getStatus().equals(Activity.Status.BY_USER))
+        } else if (!activity.getStatus().equals(Activity.Status.BY_USER)) {
             throw new RuntimeException("activity wasn't created by regular user");
+        }
         Request request = requestRepo.createRequestToRemove(activity);
         User creator = userRepo.getUserById(activity.getCreatorId());
         RequestDto requestDto = modelMapper.map(request, RequestDto.class);

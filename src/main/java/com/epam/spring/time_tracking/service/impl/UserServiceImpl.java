@@ -50,8 +50,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserInputDto userInputDto) {
         log.info("Creating user: {}", userInputDto);
-        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword()))
+        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword())) {
             throw new RuntimeException("password confirmation isn't success");
+        }
         User user = modelMapper.map(userInputDto, User.class);
         user = userRepo.createUser(user);
         return modelMapper.map(user, UserDto.class);
@@ -62,8 +63,9 @@ public class UserServiceImpl implements UserService {
         log.info("Authorizing user: {}", userLoginDto);
         User user = modelMapper.map(userLoginDto, User.class);
         user = userRepo.getUserByEmail(user.getEmail());
-        if (!userLoginDto.getPassword().equals(user.getPassword()))
+        if (!userLoginDto.getPassword().equals(user.getPassword())) {
             throw new RuntimeException("wrong password was entered");
+        }
         return modelMapper.map(user, UserDto.class);
     }
 
@@ -110,10 +112,11 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUserPassword(int userId, UserInputDto userInputDto) {
         log.info("Updating user's (id={}) password: {}", userId, userInputDto);
         User user = userRepo.getUserById(userId);
-        if (!userInputDto.getCurrentPassword().equals(user.getPassword()))
+        if (!userInputDto.getCurrentPassword().equals(user.getPassword())) {
             throw new RuntimeException("wrong current password was entered");
-        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword()))
+        } else if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword())) {
             throw new RuntimeException("password confirmation isn't success");
+        }
         User updatedUser = modelMapper.map(userInputDto, User.class);
         user = userRepo.updateUserPassword(userId, updatedUser);
         return modelMapper.map(user, UserDto.class);
