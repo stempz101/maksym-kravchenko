@@ -71,8 +71,9 @@ public class RequestServiceImpl implements RequestService {
         User creator = userRepo.findById(activityDto.getCreatorId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
-        if (creator.isAdmin())
+        if (creator.isAdmin()) {
             throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
+        }
 
         Activity activity = ActivityMapper.INSTANCE.fromActivityDto(activityDto);
         activity.setStatus(ActivityStatus.ADD_WAITING);
@@ -95,15 +96,15 @@ public class RequestServiceImpl implements RequestService {
 
         if (activity.getStatus().equals(ActivityStatus.ADD_WAITING) ||
                 activity.getStatus().equals(ActivityStatus.ADD_DECLINED) ||
-                activity.getStatus().equals(ActivityStatus.DEL_CONFIRMED))
+                activity.getStatus().equals(ActivityStatus.DEL_CONFIRMED)) {
             throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_AVAILABLE);
-        else if (activity.getStatus().equals(ActivityStatus.BY_ADMIN))
+        } else if (activity.getStatus().equals(ActivityStatus.BY_ADMIN)) {
             throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_BY_USER);
-
-        if (activity.getCreator().isAdmin())
+        } else if (activity.getCreator().isAdmin()) {
             throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
-        if (requestRepo.requestForDeleteWithActivityExists(activity))
+        } else if (requestRepo.requestForDeleteWithActivityExists(activity)) {
             throw new ExistenceException(ErrorMessage.REQUEST_EXISTS_WITH_ACTIVITY);
+        }
 
         activity.setStatus(ActivityStatus.DEL_WAITING);
 
@@ -120,8 +121,9 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestRepo.findById(requestId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.REQUEST_NOT_FOUND));
 
-        if (request.getStatus().equals(RequestStatus.CONFIRMED) || request.getStatus().equals(RequestStatus.DECLINED))
+        if (request.getStatus().equals(RequestStatus.CONFIRMED) || request.getStatus().equals(RequestStatus.DECLINED)) {
             throw new RequestStatusForActivityException();
+        }
 
         request.setStatus(RequestStatus.CONFIRMED);
 
@@ -164,15 +166,17 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestRepo.findById(requestId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.REQUEST_NOT_FOUND));
 
-        if (request.getStatus().equals(RequestStatus.CONFIRMED) || request.getStatus().equals(RequestStatus.DECLINED))
+        if (request.getStatus().equals(RequestStatus.CONFIRMED) || request.getStatus().equals(RequestStatus.DECLINED)) {
             throw new RequestStatusForActivityException();
+        }
 
         request.setStatus(RequestStatus.DECLINED);
 
-        if (request.isForDelete())
+        if (request.isForDelete()) {
             request.getActivity().setStatus(ActivityStatus.BY_USER);
-        else
+        } else {
             request.getActivity().setStatus(ActivityStatus.ADD_DECLINED);
+        }
 
         request = requestRepo.save(request);
         log.info("Request (id={}) is declined", requestId);

@@ -98,8 +98,6 @@ public class ActivityControllerTest {
         Activity activity = ActivityDataUtilTest.getActivity1(1, ActivityStatus.BY_ADMIN, UserDataUtilTest.getAdmin());
         ActivityDto activityDto = ActivityMapper.INSTANCE.toActivityDto(activity);
 
-        String createTime = activity.getCreateTime().toString().substring(0, activity.getCreateTime().toString().length() - 2);
-
         when(activityService.getActivity(activity.getId())).thenReturn(activityDto);
 
         mockMvc.perform(get("/api/v1/activity/" + activity.getId().intValue()))
@@ -114,7 +112,7 @@ public class ActivityControllerTest {
                         jsonPath("$.image").value(activity.getImage()),
                         jsonPath("$.peopleCount").value(activity.getPeopleCount()),
                         jsonPath("$.creatorId").value(activity.getCreator().getId()),
-                        jsonPath("$.createTime").value(createTime),
+                        jsonPath("$.createTime").value(notNullValue()),
                         jsonPath("$.status").value(activity.getStatus().name())
                 );
     }

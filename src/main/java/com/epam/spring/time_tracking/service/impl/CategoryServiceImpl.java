@@ -53,10 +53,11 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto createCategory(CategoryDto categoryDto) {
         log.info("Creating category: {}", categoryDto);
 
-        if (categoryRepo.existsByNameEn(categoryDto.getNameEn()))
+        if (categoryRepo.existsByNameEn(categoryDto.getNameEn())) {
             throw new ExistenceException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_EN);
-        if (categoryRepo.existsByNameUa(categoryDto.getNameUa()))
+        } else if (categoryRepo.existsByNameUa(categoryDto.getNameUa())) {
             throw new ExistenceException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_UA);
+        }
 
         Category category = CategoryMapper.INSTANCE.fromCategoryDto(categoryDto);
 
@@ -73,12 +74,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepo.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
-        if (category.isDefault())
+        if (category.isDefault()) {
             throw new CategoryIsDefaultException();
-        if (categoryRepo.existsByNameEn(categoryDto.getNameEn()) && !category.getNameEn().equals(categoryDto.getNameEn()))
+        } else if (categoryRepo.existsByNameEn(categoryDto.getNameEn()) && !category.getNameEn().equals(categoryDto.getNameEn())) {
             throw new ExistenceException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_EN);
-        if (categoryRepo.existsByNameUa(categoryDto.getNameUa()) && !category.getNameUa().equals(categoryDto.getNameUa()))
+        } else if (categoryRepo.existsByNameUa(categoryDto.getNameUa()) && !category.getNameUa().equals(categoryDto.getNameUa())) {
             throw new ExistenceException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_UA);
+        }
 
         category = UpdateMapper.updateCategoryWithPresentCategoryDtoFields(category, categoryDto);
 
@@ -95,8 +97,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepo.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
-        if (category.isDefault())
+        if (category.isDefault()) {
             throw new CategoryIsDefaultException();
+        }
 
         category.getActivities().forEach(activity -> {
             if (activity.getCategories().size() <= 1) {

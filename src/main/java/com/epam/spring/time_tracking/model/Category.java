@@ -27,7 +27,7 @@ public class Category {
     @Column(unique = true, nullable = false)
     private String nameUa;
 
-    private boolean isDefault = false;
+    private boolean isDefault;
 
     @ManyToMany(mappedBy = "categories")
     @OnDelete(action = OnDeleteAction.CASCADE)
