@@ -62,8 +62,9 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityDto createActivity(ActivityDto activityDto) {
         log.info("Creating activity: {}", activityDto);
 
-        if (!userRepo.getUserById(activityDto.getCreatorId()).isAdmin())
+        if (!userRepo.getUserById(activityDto.getCreatorId()).isAdmin()) {
             throw new RestrictionException(ErrorMessage.INSTANTLY_ACTIVITY_CREATION);
+        }
 
         Activity activity = activityRepo.createActivity(activityWithSetCategories(activityDto));
         return ActivityMapper.INSTANCE.toActivityDto(activity);

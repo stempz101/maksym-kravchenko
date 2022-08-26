@@ -50,14 +50,16 @@ public class ActivityRepoImpl implements ActivityRepo {
     public Activity createActivity(Activity activity) {
         log.info("Creating activity: {}", activity);
 
-        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
+        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId())) {
             activity.setStatus(Activity.Status.BY_ADMIN);
-        else
+        } else {
             activity.setStatus(Activity.Status.ADD_WAITING);
+        }
 
         activity.setId(++idCounter);
-        if (activity.getCategories() == null || activity.getCategories().isEmpty())
+        if (activity.getCategories() == null || activity.getCategories().isEmpty()) {
             activity.setCategories(List.of(categoryRepo.getCategory(0)));
+        }
         activity.setCreateTime(LocalDateTime.now());
 
         activityList.add(activity);
@@ -67,9 +69,11 @@ public class ActivityRepoImpl implements ActivityRepo {
     @Override
     public List<Activity> getActivitiesCreatedByUser(int userId, boolean checkForAdmin) {
         log.info("Getting activities, which creator has an id: {}", userId);
-        if (checkForAdmin)
-            if (!userRepo.checkIfUserIsAdmin(userId))
+        if (checkForAdmin) {
+            if (!userRepo.checkIfUserIsAdmin(userId)) {
                 throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_AN_ADMIN);
+            }
+        }
         return activityList.stream()
                 .filter(activity -> activity.getCreatorId() == userId)
                 .collect(Collectors.toList());
@@ -80,10 +84,11 @@ public class ActivityRepoImpl implements ActivityRepo {
         log.info("Updating activity (id={}): {}", activityId, activity);
         Activity updatedActivity = getActivityById(activityId);
         updatedActivity.setName(activity.getName());
-        if (activity.getCategories() == null || activity.getCategories().isEmpty())
+        if (activity.getCategories() == null || activity.getCategories().isEmpty()) {
             updatedActivity.setCategories(List.of(categoryRepo.getCategory(0)));
-        else
+        } else {
             updatedActivity.setCategories(activity.getCategories());
+        }
         updatedActivity.setDescription(activity.getDescription());
         updatedActivity.setImage(activity.getImage());
         return updatedActivity;
@@ -102,8 +107,9 @@ public class ActivityRepoImpl implements ActivityRepo {
                 .filter(activity -> activity.getCategories().contains(category))
                 .forEach(activity -> {
                     activity.getCategories().removeIf(c -> c.getId() == category.getId());
-                    if (activity.getCategories().isEmpty())
+                    if (activity.getCategories().isEmpty()) {
                         activity.getCategories().add(Category.builder().nameEN("Other").nameUA("Інше").build());
+                    }
                 });
     }
 

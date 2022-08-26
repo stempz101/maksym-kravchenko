@@ -65,8 +65,9 @@ public class UserActivityRepoImpl implements UserActivityRepo {
         Activity activity = activityRepo.getActivityById(activityId);
         checkIfActivityIsAvailable(activity);
         User user = userRepo.getUserById(userId);
-        if (user.isAdmin())
+        if (user.isAdmin()) {
             throw new ExistingException(ErrorMessage.ADMIN_CAN_NOT_BE_IN_ACTIVITY);
+        }
         UserActivity userActivity = UserActivity.builder()
                 .activity(activity)
                 .user(user)
@@ -96,8 +97,9 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                 .filter(userActivity -> userActivity.getUser().getId() == userId)
                 .map(UserActivity::getActivity)
                 .collect(Collectors.toList());
-        if (!activities.isEmpty())
+        if (!activities.isEmpty()) {
             activities.forEach(activity -> activity.setPeopleCount(activity.getPeopleCount() - 1));
+        }
         userActivityList.removeIf(userActivity -> userActivity.getUser().getId() == userId);
     }
 
@@ -144,8 +146,9 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                 .filter(ua -> ua.getActivity().getId() == activityId &&
                         ua.getUser().getId() == userId)
                 .findFirst();
-        if (userActivity.isPresent())
+        if (userActivity.isPresent()) {
             throw new ExistingException(ErrorMessage.USER_EXISTS_IN_ACTIVITY);
+        }
     }
 
     private void checkIfActivityIsAvailable(Activity activity) {

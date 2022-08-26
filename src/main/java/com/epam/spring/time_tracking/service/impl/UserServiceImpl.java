@@ -52,8 +52,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("Creating user: {}", userDto);
-        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
+        if (!userDto.getPassword().equals(userDto.getRepeatPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
+        }
         User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.createUser(user);
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
@@ -64,8 +65,9 @@ public class UserServiceImpl implements UserService {
         log.info("Authorizing user: {}", userDto);
         User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.getUserByEmail(user.getEmail());
-        if (!userDto.getPassword().equals(user.getPassword()))
+        if (!userDto.getPassword().equals(user.getPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
+        }
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
@@ -106,10 +108,11 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUserPassword(int userId, UserDto userDto) {
         log.info("Updating user's (id={}) password: {}", userId, userDto);
         User user = userRepo.getUserById(userId);
-        if (!userDto.getCurrentPassword().equals(user.getPassword()))
+        if (!userDto.getCurrentPassword().equals(user.getPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
-        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
+        } else if (!userDto.getPassword().equals(userDto.getRepeatPassword())) {
             throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
+        }
         User updatedUser = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.updateUserPassword(userId, updatedUser);
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);

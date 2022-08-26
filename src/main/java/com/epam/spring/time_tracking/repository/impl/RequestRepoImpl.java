@@ -102,10 +102,11 @@ public class RequestRepoImpl implements RequestRepo {
         Request request = getRequest(requestId);
         request.setStatus(Request.Status.DECLINED);
         Activity activity = activityRepo.getActivityById(request.getActivityId());
-        if (request.isForDelete())
+        if (request.isForDelete()) {
             activity.setStatus(Activity.Status.BY_USER);
-        else
+        } else {
             activity.setStatus(Activity.Status.ADD_DECLINED);
+        }
         return request;
     }
 
@@ -114,8 +115,9 @@ public class RequestRepoImpl implements RequestRepo {
         log.info("Deleting request with id: {}", requestId);
         Request request = getRequest(requestId);
         if ((request.isForDelete() && request.getStatus().equals(Request.Status.CONFIRMED)) ||
-                (!request.isForDelete() && !request.getStatus().equals(Request.Status.CONFIRMED)))
+                (!request.isForDelete() && !request.getStatus().equals(Request.Status.CONFIRMED))) {
             activityRepo.deleteActivityById(request.getActivityId());
+        }
         requestList.remove(request);
     }
 

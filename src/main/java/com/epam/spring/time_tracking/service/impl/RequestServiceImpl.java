@@ -49,8 +49,9 @@ public class RequestServiceImpl implements RequestService {
     public RequestDto createRequestToAdd(ActivityDto activityDto) {
         log.info("Creating request to add an activity: {}", activityDto);
 
-        if (userRepo.checkIfUserIsAdmin(activityDto.getCreatorId()))
+        if (userRepo.checkIfUserIsAdmin(activityDto.getCreatorId())) {
             throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
+        }
 
         Activity activity = ActivityMapper.INSTANCE.fromActivityDto(activityDto);
         User creator = userRepo.getUserById(activity.getCreatorId());
@@ -63,8 +64,9 @@ public class RequestServiceImpl implements RequestService {
         log.info("Creating request to remove an activity with id: {}", activityId);
 
         Activity activity = activityRepo.getActivityById(activityId);
-        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
+        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId())) {
             throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
+        }
 
         User creator = userRepo.getUserById(activity.getCreatorId());
         Request request = requestRepo.createRequestToRemove(activity);
